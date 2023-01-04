@@ -1,11 +1,4 @@
-;////////////////////////////////////////////////////////////
-;//  Adi-Soyadi			: Alper Alpaslan							       
-;//  Numara			: 05190000480						  
-;//  Tarih			: 21.06.2021						  
-;//  Uygulama Adi		: Odev 2                                 
-;//  
-;//	 Aciklama		: Vantilatör Uygulaması
-;//	 				 
+	 
 ;////////////////////////////////////////////////////////////
 
 main:
@@ -16,21 +9,21 @@ org 23H ; seri port kelime al
 mainson:
 ms_bekleme equ -50000
 	clr p3.5
-	mov r6,#20	; zamanlayici için 1snlik integer
+	mov r6,#20	; zamanlayici iÃ§in 1snlik integer
 	mov r2,#60	; zamnalayici 1 dakika sayan integer
-	mov r3,#5	; pmw sinyali için aç kapa oranini belirliyor sabit deger
-	mov r7,#3	; maksimum 3 kere hiz ayari düsürebilecegi için atadigim deger
-	mov r4,#0   ; zamanlayici için
+	mov r3,#5	; pmw sinyali iÃ§in aÃ§ kapa oranini belirliyor sabit deger
+	mov r7,#3	; maksimum 3 kere hiz ayari dÃ¼sÃ¼rebilecegi iÃ§in atadigim deger
+	mov r4,#0   ; zamanlayici iÃ§in
 	mov r0,#15  ; zamanlayici dakika sayici
-	mov r5,#5	; aç kapa oranini ayarlayan degisken
+	mov r5,#5	; aÃ§ kapa oranini ayarlayan degisken
 	clr p2.5	; zamanlayici 120dk dan sonra kapaninca set edilen tus biti
-	setb ps		; seri porta öncelik veriyoruz
+	setb ps		; seri porta Ã¶ncelik veriyoruz
 	clr a
 	mov tmod, #20h ; t1 8 bit auto reload	
 	mov th1,#-7 	; baud 9600 for 12k mhz 
 	mov scon,#50h	; smod 1 renable 1
 	mov ie,#10010000b ; kesme yetkileri
-	setb it1	; düsen kenarla kesme yapmasi için
+	setb it1	; dÃ¼sen kenarla kesme yapmasi iÃ§in
 	setb it0
 	sjmp $	; kelime bekleme satiri
 	
@@ -42,27 +35,27 @@ calismayadevam:
 ON:
 	mov a,r3	; belirlenen zaman sabitini r5 e atiyor
 	mov r5,a	
-	setb ps					; seri portun önceligini arttriyor		
-	jnb p3.2,zamanlayici	; eger zamanlayici tusuna basildiysa zamanlayiciya gidip süre islemini yapiyor
+	setb ps					; seri portun Ã¶nceligini arttriyor		
+	jnb p3.2,zamanlayici	; eger zamanlayici tusuna basildiysa zamanlayiciya gidip sÃ¼re islemini yapiyor
 zamanlayicidon:
 	jnb p3.3,hiztus			; eger hiz tusuna basildiysa hiz alt basligina gidip hiz islemini yapiyor
 hiztusdon:
-	MOV p2,#00000001B 		; dc motor saat yönünde dönmeye baslar
+	MOV p2,#00000001B 		; dc motor saat yÃ¶nÃ¼nde dÃ¶nmeye baslar
 		
 pwmbir:
-	setb p1.7				; kare dalga üretmek için önce aciyoruz
+	setb p1.7				; kare dalga Ã¼retmek iÃ§in Ã¶nce aciyoruz
 pmwhizayarla:
-	acall delay					; delay cagiriyor çünkü dalga periyodik olmali
-	djnz r5,pmwhizayarla		; süre ile kare dalgalarin on off süreleri delay yaparak hizini ayarliyor
+	acall delay					; delay cagiriyor Ã§Ã¼nkÃ¼ dalga periyodik olmali
+	djnz r5,pmwhizayarla		; sÃ¼re ile kare dalgalarin on off sÃ¼releri delay yaparak hizini ayarliyor
 
 pmwiki:					
 	clr  p1.7			
-	mov a,r3				; zaman sabitini akümülatöre atiyor
+	mov a,r3				; zaman sabitini akÃ¼mÃ¼latÃ¶re atiyor
 	mov r5,a			
-pmwhizayarlaalt:			; burada off süresini on ile toplami 5 olana kadar ayarliyor yani on süresi 3sn ise 2sn off yapiyor
+pmwhizayarlaalt:			; burada off sÃ¼resini on ile toplami 5 olana kadar ayarliyor yani on sÃ¼resi 3sn ise 2sn off yapiyor
 	acall delay				
-	inc r5					; r5 i arttirarak on ile off süresi toplami 5 olana kadar burada kaliyor 
-	cjne r5,#7,pmwhizayarlaalt	; on off süresi toplamini 5 e esitliyor
+	inc r5					; r5 i arttirarak on ile off sÃ¼resi toplami 5 olana kadar burada kaliyor 
+	cjne r5,#7,pmwhizayarlaalt	; on off sÃ¼resi toplamini 5 e esitliyor
 	clr ti
 	clr ri
 	
@@ -78,13 +71,13 @@ pmwhizayarlaalt:			; burada off süresini on ile toplami 5 olana kadar ayarliyor 
 	clr a
 	clr  p1.7			
 
-reti						; kesmenin en üste dönüsü için
+reti						; kesmenin en Ã¼ste dÃ¶nÃ¼sÃ¼ iÃ§in
 	
 zamanlayici:				; ilk zamanlayici butonuna basilinca buraya geliyor
 	setb p3.2				; zamanlayici tusunu eski haline getiriyor
 	mov a,r0				
-	subb a,#120				; zamanlayici degeri 120 dakikayi geçtimi diye kontrol ediliyor
-	jc zamanlayiciarttir	; eger carry 1 olursa 120 dakika geçilmistir zamanlayici kapatilir yoksa zamanlayici arttir ile süre arttirilir
+	subb a,#120				; zamanlayici degeri 120 dakikayi geÃ§timi diye kontrol ediliyor
+	jc zamanlayiciarttir	; eger carry 1 olursa 120 dakika geÃ§ilmistir zamanlayici kapatilir yoksa zamanlayici arttir ile sÃ¼re arttirilir
 
 zamanlayicikapat:
 	mov r0,#0
@@ -92,29 +85,29 @@ zamanlayicikapat:
 	setb p2.5			
 	sjmp zamanlayicidon		; zamanlayici kapatilip calismaya devam eder
 
-zamanlayiciarttir:			; zamanlayicida ki süreye 30 eklenip yukarida butonlar tekrar eski haline getirilir
+zamanlayiciarttir:			; zamanlayicida ki sÃ¼reye 30 eklenip yukarida butonlar tekrar eski haline getirilir
 	mov a,r0
-	add a,#30				; 30dk süresini arttirip tekrar r0 a atiyoruz
+	add a,#30				; 30dk sÃ¼resini arttirip tekrar r0 a atiyoruz
 	mov r0,a			
 	clr p3.5
 	clr p2.5
-sjmp zamanlayicidon			; en üst mainde çalismaya geri döner 
+sjmp zamanlayicidon			; en Ã¼st mainde Ã§alismaya geri dÃ¶ner 
 
 hiztus:						
-	djnz r7,hiztusson		; en basta r7 ye 3 degerini atamistim 3 den fazla basilirsa hiz kademesi ilk haline dönüyor 
+	djnz r7,hiztusson		; en basta r7 ye 3 degerini atamistim 3 den fazla basilirsa hiz kademesi ilk haline dÃ¶nÃ¼yor 
 	setb p3.3				; butonu geri aliyorum
 	mov r5,#5				; default degerlerini atiyorum
 	mov r3,#5
 	mov r7,#3				
-sjmp hiztusdon				; en yukari mainde çalismaya geri döner
+sjmp hiztusdon				; en yukari mainde Ã§alismaya geri dÃ¶ner
 	
 hiztusson:
 	setb p3.3				; hiz tusunu eski haline getiriyor
 	mov a,r3
-	subb a,#1				; r3 r5 ne kadar azsa mainde on komutu o kadar az çalisiyor hiz ayari için 
+	subb a,#1				; r3 r5 ne kadar azsa mainde on komutu o kadar az Ã§alisiyor hiz ayari iÃ§in 
 	mov r3,a
 	mov r5,a
-sjmp hiztusdon				; çalismaya devam ediyor mainde
+sjmp hiztusdon				; Ã§alismaya devam ediyor mainde
 	
 
 delay:
@@ -122,15 +115,15 @@ delay:
 	mov th0,#high(ms_bekleme)	
 
 dk:
-	mov a,r6							; burasi zamanlayici süresini ne kadar açik kalacagini ayarliyor
+	mov a,r6							; burasi zamanlayici sÃ¼resini ne kadar aÃ§ik kalacagini ayarliyor
 	mov r2,a							
 sn:
 zamanlayiciyagirme:
-	jb   p2.5,dakikasaydon				; 120 dakikadan sonra tus aktif oluyor zamanlayiciya hiç girmiyor
+	jb   p2.5,dakikasaydon				; 120 dakikadan sonra tus aktif oluyor zamanlayiciya hiÃ§ girmiyor
 	inc r4								; 1 sn sayiyor
 	cjne r4,#60,dakikasaydon			; 1(60sn) dakika oluncaya kadar dakika saymaya gitmiyor
-	mov r4,#0							; saniyeyi sifirliyor tekrar dakika saymayi için
-	djnz r0,dakikasaydon				; r0 da süre tutuluyor 0 olunca makine kapaniyor yoksa çalismaya devam ediyor
+	mov r4,#0							; saniyeyi sifirliyor tekrar dakika saymayi iÃ§in
+	djnz r0,dakikasaydon				; r0 da sÃ¼re tutuluyor 0 olunca makine kapaniyor yoksa Ã§alismaya devam ediyor
 sjmp OFF
 dakikasaydon:
 	mov r1,#20
